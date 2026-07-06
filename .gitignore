@@ -1,3 +1,4 @@
 src/raglab/index.py
 .env
 .idea/
+data/private
