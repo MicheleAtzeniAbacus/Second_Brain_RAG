@@ -2,3 +2,5 @@ src/raglab/index.py
 .env
 .idea/
 data/private
+index/
+src/raglab/__pycache__

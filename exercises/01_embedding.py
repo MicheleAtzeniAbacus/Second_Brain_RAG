@@ -6,6 +6,7 @@ demo_data = [
     ("rag", "Semantic chunking detects when the topic shifts and breaks there, instead of splitting every n tokens."),
     ("rag", "HyDE first generates a hypothetical answer, then retrieves using that as the embedding, because document and query embeddings differ in structure but not in content."),
     ("rag", "Contextual Retrieval rewrites each chunk with document context before embedding, cutting failed retrievals by 49 percent."),
+    ("rag", "article : rag - avanzato > section : punti chiave - rag exists because of the * * grounding problem * * : llms only know their training data plus the prompt, hallucinate on private / real - time facts, and struggle with accurate citations. - * * frozen rag * * ( chunk → embed → semantic search → generate ) was shaped by small historical context windows ; modern long - context models ( 200k - 2m token ) are a strong baseline — rag matches long - context answers on 63 % of queries at ~ 17 % of the cost with far lower latency. - main rag failure modes : multi - step queries, long complex queries, implicit references, and * * query - focused summarization * * ( qfs — summarize chapter 2 ), which contiguous - chunk retrieval can ' t answer. - * * agentic rag * * : give the model a search tool so it decomposes queries and searches iteratively — handles multi - step / complex queries, but relies on the model understanding domain semantics. - indexing - time techniques : * * contextual retrieval * * ( anthropic — an llm rewrites each chunk with document context ;"), 
 
     # Flutter — from wiki/reeno-app
     ("flutter", "Use Cubit for simple linear state transitions like auth status or connectivity, and Bloc when there are multiple event types or complex branching."),
@@ -57,8 +58,11 @@ def main():
     corpus_matrix = get_similarity_matrix(embeddings=embeddings)
     print(corpus_matrix.shape)
     query_corpus = [ 
-        ("q1", "how do I split documents for embedding?"),
-        ("q2", "how does the app manage state between screens?")
+        # ("q1", "how do I split documents for embedding?"),
+        # ("q2", "how does the app manage state between screens?")
+        ("q1", "What is Vertex AI?"),
+        ("q2", "Vertex AI Agent Builder RAG Engine Agent Garden DialogFlow NotebookLM"), 
+        ("q3", "RAG exists because of the grounding problem")
     ]
     queries = embed(model, query_corpus)
     retrieved_matrix = retrieve(queries, embeddings)
@@ -68,7 +72,15 @@ def main():
         for rank in np.argsort(row)[::-1]:
             print(f"  {row[rank]:+.2f}  {labels[rank]:8}  {texts[rank][:60]}")
         
+    
+    fat_text = "Article: rag-avanzato > Section: Fonti\n\n- `raw/edu/Launchpad Q3 2025_COMPILED.pdf` — slide deck with bibliography (arXiv papers, Anthropic contextual retrieval, Microsoft GraphRAG)', 'Article: rag-avanzato > Section: Punti chiave\n\n- RAG exists because of the **grounding problem**: LLMs only know their training data plus the prompt, hallucinate on private/real-time facts, and struggle with accurate citations.\n- **Frozen RAG** (chunk → embed → semantic search → generate) was shaped by small historical context windows; modern long-context models (200k–2M token) are a strong baseline — RAG matches long-context answers on 63% of queries at ~17% of the cost with far lower latency.\n- Main RAG failure modes: multi-step queries, long complex queries, implicit references, and **query-focused summarization** (QFS — summarize chapter 2), which contiguous-chunk retrieval can\'t answer.\n- **Agentic RAG**: give the model a search tool so it decomposes queries and searches iteratively — handles multi-step/complex queries, but relies on the model understanding domain semantics.\n- Indexing-time techniques: **Contextual Retrieval** (Anthropic — an LLM rewrites each chunk with document context; −49% failed retrievals, −67% with reranking), **RAPTOR** (hierarchical clustering + summaries enabling QFS), **GraphRAG** (Microsoft — entity/relationship graph with multi-level community summaries), **PAQ** (precompute probable Q&A pairs and serve cache hits at ultra-low latency).\n- Bigger/more chunks become viable with long-context models and long-context embedders; the compute/latency tradeoff still applies (32k ≈ 4s median latency, 1M ≈ 100s).\n- Google stack mentioned: Vertex AI Agent Builder (orchestrate / ground & augment / take action), RAG Engine API, Agent Garden, DialogFlow, NotebookLM.\n"
+    ids = model.tokenizer(fat_text)["input_ids"]      # text → token ids
+    print(len(ids))                                    # your fat chunk: expect ~430
 
+    window = model.max_seq_length                      # 256
+    tail_only = model.tokenizer.decode(ids[window:], skip_special_tokens=True)
+    v_tail = model.encode(tail_only, normalize_embeddings=True)   # decode(ids[window:])
+    print(queries[1] @ v_tail)    # verbatim product list vs tail
 
     # for sentence 1 [2, 0, 1, ...]. index 0 was supposed to win on pure meaning 
     # instead it got pipped by the contextual-retrieval sentence. 

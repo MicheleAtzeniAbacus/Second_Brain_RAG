@@ -14,8 +14,12 @@
 from pathlib import Path
 import re
 import statistics
+from typing import Any
 
 from sentence_transformers import SentenceTransformer
+
+from raglab import chunk_structure, ChunkedDocs
+
 
 DATA_DIR = Path("data/private")
 
@@ -113,43 +117,20 @@ def chunk_overlap(text: str, size: int = 512, overlap: float = 0.15) -> list[str
         overlapped_chunks.append(".".join(current))
     return overlapped_chunks
 
-        
-# (c) respects meaning and blows the size
-def chunk_structure(title: str, text: str) -> list[str]: 
-
-    def flush(str_chunks: list[str], header: str, body_text: list[str], title: str): 
-        str_chunks.append(f"Article: {title} > Section: {header}\n{"\n".join(body_text)}")
-    
-    structured_chunks = []
-    current_text = [] 
-    current_header = "Intro" 
-    for line in text.splitlines():
-        if line.startswith("## "):
-            if any(current_text): flush(structured_chunks, current_header, current_text, title)
-            # all text before the first ## will be with intro header
-            current_text = []
-            current_header = line.removeprefix("## ")
-        else: 
-            current_text.append(line)
-    
-    # final flush
-    if any(current_text): flush(structured_chunks, current_header, current_text, title)
-    return structured_chunks
-
 
 
 def report(name: str, chunks: list[str]) -> None: 
 
     count = len(chunks)
-    chunk_lenghts = [len(chunk) for chunk in chunks]
-    min_len = min(chunk_lenghts)
-    max_len = max(chunk_lenghts)
-    median = statistics.median(chunk_lenghts)
+    chunk_lengths = [len(chunk) for chunk in chunks]
+    min_len = min(chunk_lengths)
+    max_len = max(chunk_lengths)
+    median = statistics.median(chunk_lengths)
 
     print(f"Report for file: {name}\n\n")
     print(f"Count: {count}\n\nMin length: {min_len}\n\nMax length: {max_len}\n\nMedian length: {median}\n\n")
 
-    for i, chunk in enumerate(chunks): 
+    for i, chunk in enumerate(chunks):
         print(f"Chunk {i}:\n\n{chunk}")
         print(f"{"─" * 40}\n\n")
 
@@ -164,14 +145,14 @@ def main():
         docs.append(load_article(path))
     
     for doc in docs: 
-        chunked_vector = chunk_fixed(doc[1])
+        #chunked_vector = chunk_fixed(doc[1])
         #report(doc[0], chunked_vector)
 
-        overlapped = chunk_overlap(doc[1])
+        #overlapped = chunk_overlap(doc[1])
         #report(doc[0], overlapped)
 
         structured = chunk_structure(doc[0], doc[1])
-        report(doc[0], structured)
+        report(doc[0], [c.text for c in structured])
         # Token for the fattest chunk (found in rag-avanzato) would be: 430. 174 tokens — 40% of the chunk — do not exist in the vector with current model
 
 
