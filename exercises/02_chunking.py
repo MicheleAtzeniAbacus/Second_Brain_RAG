@@ -114,7 +114,7 @@ def chunk_overlap(text: str, size: int = 512, overlap: float = 0.15) -> list[str
             else: 
                 current.append(chunked_sentences[i])
             i +=1
-        overlapped_chunks.append(".".join(current))
+        overlapped_chunks.append(" ".join(current))
     return overlapped_chunks
 
 

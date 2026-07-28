@@ -6,6 +6,12 @@ class ChunkedDocs(NamedTuple):
     section: str
     text: str
 
+class ChildChunk(NamedTuple):
+    parent: str
+    index: int
+    text: str 
+
+
 def chunk_structure(title: str, text: str) -> list[ChunkedDocs[str, str, str]]: 
 
     def flush(str_chunks: list[tuple[str, str, str]], header: str, body_text: list[str], title: str): 

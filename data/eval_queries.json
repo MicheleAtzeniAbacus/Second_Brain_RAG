@@ -1,0 +1,69 @@
+[
+  {
+    "query": "What is Vertex AI?",
+    "gold": ["rag-avanzato::Punti chiave"],
+    "species": "direct"
+  },
+  {
+    "query": "What is a frozen RAG?",
+    "gold": ["rag-avanzato::Punti chiave"],
+    "species": "direct"
+  },
+  {
+    "query": "We have a cross-WP working group?",
+    "gold": [
+      "progetto-stage::Punti chiave",
+      "progetto-stage::Cross-WP meeting (WP 6x7x2)"
+    ],
+    "species": "direct"
+  },
+  {
+    "query": "What is SimpleBlocObserver?",
+    "gold": ["convenzioni-reeno::Punti chiave"],
+    "species": "direct"
+  },
+  {
+    "query": "How can I retrieve data to use with LLMs?",
+    "gold": ["rag-pattern::La pipeline"],
+    "species": "paraphrase"
+  },
+  {
+    "query": "Where should I put blocs?",
+    "gold": ["convenzioni-reeno::Punti chiave"],
+    "species": "paraphrase"
+  },
+  {
+    "query": "How can I retrieve data with graphs?",
+    "gold": [
+      "rag-avanzato::Punti chiave",
+      "rag-avanzato::Quando usare cosa",
+      "rag-pattern::I 10 pattern RAG"
+    ],
+    "species": "paraphrase"
+  },
+  {
+    "query": "STAGE",
+    "gold": ["progetto-stage::Intro"],
+    "species": "keyword"
+  },
+  {
+    "query": "RAG",
+    "gold": [
+      "rag-avanzato::Punti chiave",
+      "rag-pattern::Punti chiave",
+      "rag-avanzato::Quando usare cosa",
+      "rag-pattern::I 10 pattern RAG"
+    ],
+    "species": "keyword"
+  },
+  {
+    "query": "How do I configure Kubernetes ingress?",
+    "gold": [],
+    "species": "no-answer"
+  },
+  {
+    "query": "Is coursera good for learning?",
+    "gold": [],
+    "species": "no-answer"
+  }
+]
