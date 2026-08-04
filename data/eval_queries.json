@@ -65,5 +65,15 @@
     "query": "Is coursera good for learning?",
     "gold": [],
     "species": "no-answer"
+  },
+  {
+    "query": "Is there any STAGE paper already published?",
+    "gold": [],
+    "species": "no-answer"
+  },
+  {
+    "query": "When hydrated BLoC are useful?",
+    "gold": [],
+    "species": "no-answer"
   }
 ]
